@@ -1,20 +1,20 @@
+package manager;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.HashMap;
+import task.*;
 
 public class TaskManager {
-    private HashMap<Integer, Task> tasks;
-    private HashMap<Integer, Epic> epics;
-    private HashMap<Integer, Subtask> subtasks;
-    private int id;
+    private final HashMap<Integer, Task> tasks = new HashMap<>();
+    private final HashMap<Integer, Epic> epics = new HashMap<>();
+    private final HashMap<Integer, Subtask> subtasks = new HashMap<>();
+    private int id = 1;
 
     public TaskManager() {
-        tasks = new HashMap<>();
-        subtasks = new HashMap<>();
-        epics = new HashMap<>();
-        id = 1;
     }
 
-    public ArrayList<Task> getAllTasks() {
+    //Методы для Task
+    public List<Task> getAllTasks() {
         return new ArrayList<>(tasks.values());
     }
 
@@ -26,9 +26,10 @@ public class TaskManager {
         return tasks.get(id);
     }
 
-    public void createTask(Task task) {
+    public Task createTask(Task task) {
         task.setTaskId(id++);
         tasks.put(task.getTaskId(), task);
+        return task;
     }
 
     public void updateTask(Task task) {
@@ -41,7 +42,8 @@ public class TaskManager {
         tasks.remove(id);
     }
 
-    public ArrayList<Subtask> getAllSubtasks() {
+    //Методы для Subtask
+    public List<Subtask> getAllSubtasks() {
         return new ArrayList<>(subtasks.values());
     }
 
@@ -88,7 +90,7 @@ public class TaskManager {
     }
 
     // Методы для Epic
-    public ArrayList<Epic> getAllEpics() {
+    public List<Epic> getAllEpics() {
         return new ArrayList<>(epics.values());
     }
 
@@ -125,7 +127,7 @@ public class TaskManager {
         }
     }
 
-    public ArrayList<Subtask> getSubtasksByEpicId(int epicId) {
+    public List<Subtask> getSubtasksByEpicId(int epicId) {
         ArrayList<Subtask> result = new ArrayList<>();
         Epic epic = epics.get(epicId);
         if (epic != null) {
@@ -145,7 +147,7 @@ public class TaskManager {
             return;
         }
 
-        ArrayList<Subtask> epicSubtasks = getSubtasksByEpicId(epicId);
+        List<Subtask> epicSubtasks = getSubtasksByEpicId(epicId);
         if (epicSubtasks.isEmpty()) {
             epic.setTaskStatus(TaskStatus.NEW);
             return;
@@ -175,4 +177,3 @@ public class TaskManager {
         }
     }
 }
-
