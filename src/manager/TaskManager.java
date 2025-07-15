@@ -32,10 +32,11 @@ public class TaskManager {
         return task;
     }
 
-    public void updateTask(Task task) {
+    public Task updateTask(Task task) {
         if (tasks.containsKey(task.getTaskId())) {
             tasks.put(task.getTaskId(), task);
         }
+        return task;
     }
 
     public void deleteTaskById(int id) {
@@ -70,11 +71,12 @@ public class TaskManager {
         return subtask;
     }
 
-    public void updateSubtask(Subtask subtask) {
+    public Subtask updateSubtask(Subtask subtask) {
         if (subtasks.containsKey(subtask.getTaskId())) {
             subtasks.put(subtask.getTaskId(), subtask);
             updateEpicStatus(subtask.getEpicId());
         }
+        return subtask;
     }
 
     public void deleteSubtaskById(int id) {
@@ -109,12 +111,13 @@ public class TaskManager {
         return epic;
     }
 
-    public void updateEpic(Epic epic) {
+    public Epic updateEpic(Epic epic) {
         if (epics.containsKey(epic.getTaskId())) {
             Epic tempEpic = epics.get(epic.getTaskId());
             tempEpic.setTaskName(epic.getTaskName());
             tempEpic.setTaskDescription(epic.getTaskDescription());
         }
+        return epic;
     }
 
     public void deleteEpicById(int id) {
