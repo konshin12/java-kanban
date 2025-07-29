@@ -3,7 +3,7 @@ import manager.*;
 
 public class Main {
     public static void main(String[] args) {
-        TaskManager manager = new TaskManager();
+        InMemoryTaskManager manager = new InMemoryTaskManager();
 
         Task task1 = new Task("Задача1", "Доделать уже этот тасктрекер))))", TaskStatus.NEW);
         Task task2 = new Task("Задача2", "Описание задачи2", TaskStatus.NEW);
