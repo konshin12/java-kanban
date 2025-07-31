@@ -14,7 +14,11 @@ public class InMemoryHistoryManager implements  HistoryManager {
 
     @Override
     public void add(Task task) {
-
+        if (isHistoryListFull()) {
+            taskHistoryList.remove(OLD_TASK);
+        }
+        Task newTask = copyTask(task);
+        taskHistoryList.add(newTask);
     }
 
     @Override
@@ -27,24 +31,11 @@ public class InMemoryHistoryManager implements  HistoryManager {
         return taskHistoryList.size() == HISTORY_LIST_CAPACITY;
     }
 
-//    public void addTaskToHistoryList(int id) {
-//        if (isHistoryListFull()) {
-//            taskHistoryList.remove(OLD_TASK);
-//        }
-//        taskHistoryList.add(tasks.get(id));
-//    }
-//
-//    public void addSubTaskToHistoryList(int id) {
-//        if (isHistoryListFull()) {
-//            taskHistoryList.remove(OLD_TASK);
-//        }
-//        taskHistoryList.add(subtasks.get(id));
-//    }
-//
-//    public void addEpicToHistoryList(int id) {
-//        if (isHistoryListFull()) {
-//            taskHistoryList.remove(OLD_TASK);
-//        }
-//        taskHistoryList.add(epics.get(id));
-//    }
+    private Task copyTask(Task original) {
+        if (original == null) {
+            throw new IllegalArgumentException("Нельзя скопировать пустую задачу");
+        }
+        return new Task(original.getTaskName(), original.getTaskDescription(),
+                original.getTaskStatus());
+    }
 }
