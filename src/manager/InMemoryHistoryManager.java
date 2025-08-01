@@ -9,7 +9,7 @@ import task.*;
 public class InMemoryHistoryManager implements  HistoryManager {
     private static final int OLD_TASK = 0;
     private static final int HISTORY_LIST_CAPACITY = 10;
-    private final ArrayList<Task> taskHistoryList = new ArrayList<>(HISTORY_LIST_CAPACITY);
+    private final List<Task> taskHistoryList = new ArrayList<>(HISTORY_LIST_CAPACITY);
 
 
     @Override

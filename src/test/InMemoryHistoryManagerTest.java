@@ -7,33 +7,26 @@ import task.*;
 
 class InMemoryHistoryManagerTest {
 
-    public static final int FIRST_ELEMENT = 0;
-    public static final int THIRD_ELEMENT = 2;
     TaskManager taskManager = Managers.getDefault();
 
     @Test
-    void historyManagerShouldPreserveTaskState() {
-        Task task = new Task("Task", "Desc", TaskStatus.NEW);
-        taskManager.createTask(task);
-        Epic epic = new Epic("LLL", "опись");
-        taskManager.createEpic(epic);
+    void shouldReturnTrueWhenTasksAreDifferent() {
+        Task task = new Task("Оригинальная задача", "Описание оригинальной задачи", TaskStatus.NEW);
+        taskManager.createTask(task); // создаем задачу
 
-        // Первое добавление в историю
-        taskManager.getTaskById(task.getTaskId());
-        taskManager.getEpicById(epic.getTaskId());
-        Task firstVersion = taskManager.getHistory().get(FIRST_ELEMENT);
+        taskManager.getTaskById(task.getTaskId()); // получаем задачу по id (должна быть просмотрена и добавлена в историю)
+        Task firstVersionOfTask = taskManager.getHistory().get(0); // достаем из истории просмотров первую задачу
 
-        // Изменяем задачу
-        task.setTaskStatus(TaskStatus.IN_PROGRESS);
-        epic.setTaskDescription("Юный");
-        taskManager.updateTask(task);
+        task.setTaskStatus(TaskStatus.IN_PROGRESS);// меняем статус задачи
+        task.setTaskDescription("Описание измененной задачи"); // меняем описание задачи
+        taskManager.updateTask(task); // обновляем задачу (статус и описание сохраненной в истории задачи не должен измениться)
 
-        // Второе добавление в историю
-        taskManager.getTaskById(task.getTaskId());
-        taskManager.getEpicById(epic.getTaskId());
-        Task secondVersion = taskManager.getHistory().get(THIRD_ELEMENT);
+        taskManager.getTaskById(task.getTaskId()); // получаем обновленную задачу по id (должна быть просмотрена и добавлена в историю)
+        Task updatedVersionOfTask = taskManager.getHistory().get(1); // достаем из истории просмотров вторую задачу
 
-        assertNotEquals(firstVersion.getTaskStatus(), secondVersion.getTaskStatus(),
+        // Сравниваем оригинальную и обновленную версии
+        // При отработке теста - ожидаем true
+        assertNotEquals(firstVersionOfTask.getTaskStatus(), updatedVersionOfTask.getTaskStatus(),
                 "HistoryManager должен сохранять разные состояния задачи");
     }
 }
