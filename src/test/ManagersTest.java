@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import task.*;
 import manager.*;
 
-class ManagersTest {
+public class ManagersTest {
 
     @Test
     void managersShouldNotReturnNull() {

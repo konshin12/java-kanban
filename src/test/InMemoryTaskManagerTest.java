@@ -12,7 +12,7 @@ import task.TaskStatus;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-class InMemoryTaskManagerTest {
+public class InMemoryTaskManagerTest {
 
     TaskManager taskManager;
     @BeforeEach

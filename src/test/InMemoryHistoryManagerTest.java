@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import manager.*;
 import task.*;
 
-class InMemoryHistoryManagerTest {
+public class InMemoryHistoryManagerTest {
 
     TaskManager taskManager = Managers.getDefault();
 
