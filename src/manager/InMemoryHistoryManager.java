@@ -3,32 +3,29 @@ package manager;
 import task.Task;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
+
 import task.*;
 
-public class InMemoryHistoryManager implements  HistoryManager {
-    private static final int OLD_TASK = 0;
-    private static final int HISTORY_LIST_CAPACITY = 10;
-    private final List<Task> taskHistoryList = new ArrayList<>(HISTORY_LIST_CAPACITY);
+public class InMemoryHistoryManager implements HistoryManager {
+    private final List<Task> taskHistoryList = new ArrayList<>();
+
+    private final Map<Integer, Node> nodeMap = new HashMap<>();
+    private Node first;
+    private Node last;
 
 
     @Override
     public void add(Task task) {
-        if (isHistoryListFull()) {
-            taskHistoryList.remove(OLD_TASK);
+        if (task == null) {
+            return;
         }
-        Task newTask = copyTask(task);
-        taskHistoryList.add(newTask);
-    }
-
-    @Override
-    public List<Task> getHistory() {
-        List<Task> result = taskHistoryList;
-        return result;
-    }
-
-    public boolean isHistoryListFull() {
-        return taskHistoryList.size() == HISTORY_LIST_CAPACITY;
+        final int taskId = task.getTaskId();
+        remove(taskId);
+        linkLast(task);
+        nodeMap.put(taskId, last);
     }
 
     private Task copyTask(Task original) {
@@ -37,5 +34,58 @@ public class InMemoryHistoryManager implements  HistoryManager {
         }
         return new Task(original.getTaskName(), original.getTaskDescription(),
                 original.getTaskStatus());
+    }
+
+    public void removeNode(int id) { //удаление узла
+        final Node node = nodeMap.remove(id);
+        if (node != null) {
+            if (first == last) {
+                first = node.prev = null;
+                last = node.next = null;
+            } else if (node == first) { // first node
+                first = node.next;
+                first.prev = null;
+            } else if (node == last) { //last node
+                last = node.prev;
+                last.next = null;
+            } else { //middle node
+                if (node.prev != null) {
+                    node.prev.next = node.next;
+                }
+                if (node.next != null) {
+                    node.next.prev = node.prev;
+                }
+            }
+        }
+    }
+
+    public void linkLast(Task task) {
+        last = new Node(task, null, last);
+    }
+
+    public void remove(int id) {
+        removeNode(id);
+    }
+
+    public List<Task> getTasks() {
+        for (Node node : nodeMap.values()) {
+            taskHistoryList.add(node.task);
+        }
+        return taskHistoryList;
+    }
+
+    @Override
+    public List<Task> getHistory() {
+        return getTasks();
+    }
+
+    @Override
+    public String toString() {
+        return "InMemoryHistoryManager{" +
+                "taskHistoryList=" + taskHistoryList +
+                ", nodeMap=" + nodeMap +
+                ", first=" + first +
+                ", last=" + last +
+                '}';
     }
 }
