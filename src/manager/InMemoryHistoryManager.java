@@ -36,26 +36,22 @@ public class InMemoryHistoryManager implements HistoryManager {
                 original.getTaskStatus());
     }
 
-    public void removeNode(int id) { //удаление узла
+    public void removeNode(int id) {
         final Node node = nodeMap.remove(id);
-        if (node != null) {
-            if (first == last) {
-                first = node.prev = null;
-                last = node.next = null;
-            } else if (node == first) { // first node
-                first = node.next;
-                first.prev = null;
-            } else if (node == last) { //last node
-                last = node.prev;
-                last.next = null;
-            } else { //middle node
-                if (node.prev != null) {
-                    node.prev.next = node.next;
-                }
-                if (node.next != null) {
-                    node.next.prev = node.prev;
-                }
-            }
+        if (node == null) return;
+
+        if (node.prev != null) {
+            node.prev.next = node.next;
+        }
+        if (node.next != null) {
+            node.next.prev = node.prev;
+        }
+
+        if (node == first) {
+            first = node.next;
+        }
+        if (node == last) {
+            last = node.prev;
         }
     }
 

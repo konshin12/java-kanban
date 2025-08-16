@@ -15,11 +15,7 @@ public class Main {
         manager.createSubtask(subtask1);
 
         manager.getTaskById(task1.getTaskId());
-        manager.getEpicById(epic1.getTaskId());
-        manager.getSubtaskById(subtask1.getTaskId());
         manager.getTaskById(task1.getTaskId());
-        manager.getEpicById(epic1.getTaskId());
-        manager.remove(task1.getTaskId());
 
         System.out.println("История: " + manager.getHistory());
     }
