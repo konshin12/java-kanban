@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
-import java.util.Objects;
 
 public class InMemoryHistoryManager implements HistoryManager {
     private final List<Task> taskHistoryList = new ArrayList<>();
