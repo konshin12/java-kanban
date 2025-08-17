@@ -15,8 +15,9 @@ public class Main {
         manager.createSubtask(subtask1);
 
         manager.getTaskById(task1.getTaskId());
+        task1.setTaskStatus(TaskStatus.IN_PROGRESS);
+        manager.updateTask(task1);
         manager.getTaskById(task1.getTaskId());
-
         System.out.println("История: " + manager.getHistory());
     }
 }
