@@ -50,7 +50,7 @@ public class Task {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return (taskId == task.taskId && taskDescription.equals(task.taskDescription) && taskStatus == task.taskStatus && taskName.equals(task.taskName));
+        return taskId == task.taskId;
     }
 
     @Override
