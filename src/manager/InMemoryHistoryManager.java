@@ -89,5 +89,4 @@ public class InMemoryHistoryManager implements HistoryManager {
                 ", last=" + last +
                 '}';
     }
-
 }
