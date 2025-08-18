@@ -4,7 +4,6 @@ import task.Task;
 
 import java.util.ArrayList;
 import java.util.List;
-import task.*;
 
 public class InMemoryHistoryManager implements  HistoryManager {
     private static final int OLD_TASK = 0;
