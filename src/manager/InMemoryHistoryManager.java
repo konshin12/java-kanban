@@ -8,8 +8,6 @@ import java.util.Map;
 import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private final List<Task> taskHistoryList = new ArrayList<>();
-
     private final Map<Integer, Node> nodeMap = new HashMap<>();
     private Node first;
     private Node last;
@@ -20,11 +18,13 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (task == null) {
             return;
         }
-        Task copyTask = copyTask(task);
+
         int taskId = task.getTaskId();
-        copyTask.setTaskId(taskId);
+        Task copyTask = copyTask(task);
+
         if (nodeMap.containsKey(taskId)) {
             Node node = nodeMap.get(taskId);
+
             if (node.task.equals(copyTask)) {
                 remove(taskId);
             }
@@ -37,17 +37,24 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (original == null) {
             throw new IllegalArgumentException("Нельзя скопировать пустую задачу");
         }
-        return new Task(original.getTaskName(), original.getTaskDescription(),
+
+        Task copyTask = new Task(original.getTaskName(), original.getTaskDescription(),
                 original.getTaskStatus());
+        copyTask.setTaskId(original.getTaskId());
+        return copyTask;
     }
 
-    public void removeNode(int id) {
+    private void removeNode(int id) {
         final Node node = nodeMap.remove(id);
-        if (node == null) return;
+
+        if (node == null) {
+            return;
+        }
 
         if (node.prev != null) {
             node.prev.next = node.next;
         }
+
         if (node.next != null) {
             node.next.prev = node.prev;
         }
@@ -55,20 +62,23 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (node == first) {
             first = node.next;
         }
+
         if (node == last) {
             last = node.prev;
         }
     }
 
-    public void linkLast(Task task) {
+    private void linkLast(Task task) {
         last = new Node(task, null, last);
     }
 
+    @Override
     public void remove(int id) {
         removeNode(id);
     }
 
-    public List<Task> getTasks() {
+    private List<Task> getTasks() {
+        final List<Task> taskHistoryList = new ArrayList<>();
         for (Node node : nodeMap.values()) {
             taskHistoryList.add(node.task);
         }
@@ -78,15 +88,5 @@ public class InMemoryHistoryManager implements HistoryManager {
     @Override
     public List<Task> getHistory() {
         return getTasks();
-    }
-
-    @Override
-    public String toString() {
-        return "InMemoryHistoryManager{" +
-                "taskHistoryList=" + taskHistoryList +
-                ", nodeMap=" + nodeMap +
-                ", first=" + first +
-                ", last=" + last +
-                '}';
     }
 }
