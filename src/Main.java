@@ -93,8 +93,9 @@ public class Main {
         if (history.isEmpty()) {
             System.out.println("История пуста");
         } else {
+            Task task;
             for (int i = 0; i < history.size(); i++) {
-                Task task = history.get(i);
+                task = history.get(i);
                 System.out.println((i + 1) + ". " + task.getClass().getSimpleName() +
                         " [ID: " + task.getTaskId() +
                         ", Status: " + task.getTaskStatus() +

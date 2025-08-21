@@ -25,7 +25,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (nodeMap.containsKey(taskId)) {
             Node node = nodeMap.get(taskId);
 
-            if (node.task.equals(copyTask)) {
+            if (node.getTask().equals(copyTask)) {
                 remove(taskId);
             }
         }
@@ -51,20 +51,20 @@ public class InMemoryHistoryManager implements HistoryManager {
             return;
         }
 
-        if (node.prev != null) {
-            node.prev.next = node.next;
+        if (node.getPrev() != null) {
+            node.getPrev().setNext(node.getNext());
         }
 
-        if (node.next != null) {
-            node.next.prev = node.prev;
+        if (node.getNext() != null) {
+            node.getNext().setPrev(node.getPrev());
         }
 
         if (node == first) {
-            first = node.next;
+            first = node.getNext();
         }
 
         if (node == last) {
-            last = node.prev;
+            last = node.getPrev();
         }
     }
 
@@ -80,7 +80,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     private List<Task> getTasks() {
         final List<Task> taskHistoryList = new ArrayList<>();
         for (Node node : nodeMap.values()) {
-            taskHistoryList.add(node.task);
+            taskHistoryList.add(node.getTask());
         }
         return taskHistoryList;
     }
