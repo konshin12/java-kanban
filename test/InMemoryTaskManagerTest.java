@@ -1,7 +1,6 @@
 package test;
 
 import manager.HistoryManager;
-import manager.InMemoryTaskManager;
 import manager.Managers;
 import manager.TaskManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,8 +9,6 @@ import task.Epic;
 import task.Subtask;
 import task.Task;
 import task.TaskStatus;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
