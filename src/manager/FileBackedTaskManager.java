@@ -35,13 +35,15 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     private String taskToString(Task task) {
-        if (task instanceof Epic) {
+        // Используем полиморфизм - каждый тип задачи знает как себя преобразовать в CSV
+        if (task.getClass() == Epic.class) {
+            Epic epic = (Epic) task;
             return String.format("%d,EPIC,%s,%s,%s,",
-                    task.getTaskId(),
-                    task.getTaskName(),
-                    task.getTaskStatus(),
-                    task.getTaskDescription());
-        } else if (task instanceof Subtask) {
+                    epic.getTaskId(),
+                    epic.getTaskName(),
+                    epic.getTaskStatus(),
+                    epic.getTaskDescription());
+        } else if (task.getClass() == Subtask.class) {
             Subtask subtask = (Subtask) task;
             return String.format("%d,SUBTASK,%s,%s,%s,%d",
                     subtask.getTaskId(),
@@ -61,27 +63,27 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     private Task taskFromString(String value) {
         String[] fields = value.split(",");
         int id = Integer.parseInt(fields[0]);
-        TypeTask type = TypeTask.valueOf(fields[1]);
+        String type = fields[1];
         String name = fields[2];
         TaskStatus status = TaskStatus.valueOf(fields[3]);
         String description = fields[4];
 
         switch (type) {
-            case TASK:
+            case "TASK":
                 Task task = new Task(name, description, status);
                 task.setTaskId(id);
                 return task;
-            case EPIC:
+            case "EPIC":
                 Epic epic = new Epic(name, description);
                 epic.setTaskId(id);
                 epic.setTaskStatus(status);
                 return epic;
-            case SUBTASK:
+            case "SUBTASK":
                 int epicId = Integer.parseInt(fields[5]);
-                // Временный объект - эпик будет установлен позже
-                Subtask subtask = new Subtask(name, description, status, null);
+                // Создаем временный объект без эпика
+                Subtask subtask = new Subtask(name, description, status, new Epic("temp", "temp"));
                 subtask.setTaskId(id);
-                subtask.setTaskId(epicId); // Сохраняем ID эпика
+                subtask.setEpicId(epicId); // Устанавливаем ID эпика
                 return subtask;
             default:
                 throw new IllegalArgumentException("Неизвестный тип задачи: " + type);
