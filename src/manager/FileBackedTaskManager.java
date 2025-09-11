@@ -94,16 +94,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         FileBackedTaskManager manager = new FileBackedTaskManager(file);
 
         try {
-            if (!file.exists()) {
-                return manager; // Файл не существует - возвращаем пустой менеджер
-            }
+            if (!file.exists()) return manager;
 
             String content = Files.readString(file.toPath());
             String[] lines = content.split("\n");
 
-            if (lines.length <= 1) {
-                return manager; // Только заголовок или пустой файл
-            }
+            if (lines.length <= 1) return manager;
 
             List<Task> tasks = new ArrayList<>();
             List<Epic> epics = new ArrayList<>();
@@ -114,9 +110,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 if (line.isEmpty()) continue;
 
                 Task task = manager.taskFromString(line);
-                if (task instanceof Epic) {
+
+                if (task.getClass() == Epic.class) {
                     epics.add((Epic) task);
-                } else if (task instanceof Subtask) {
+                } else if (task.getClass() == Subtask.class) {
                     subtasks.add((Subtask) task);
                 } else {
                     tasks.add(task);
@@ -127,6 +124,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 }
             }
 
+            // Загрузка в memoryManager
             for (Epic epic : epics) {
                 manager.getEpics().put(epic.getTaskId(), epic);
             }
@@ -155,7 +153,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             }
 
         } catch (IOException e) {
-            throw new ManagerSaveException("Ошибка при загрузке из файла", e);
+            throw new ManagerSaveException("Ошибка загрузки", e);
         }
 
         return manager;
