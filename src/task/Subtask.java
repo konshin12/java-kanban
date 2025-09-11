@@ -5,10 +5,16 @@ public class Subtask extends Task {
 
     public Subtask(String taskName, String taskDescription, TaskStatus taskStatus, Epic epic) {
         super(taskName, taskDescription, taskStatus);
-        this.epicId = epic.getTaskId();
+        if (epic != null) {
+            this.epicId = epic.getTaskId();
+        }
     }
 
     public int getEpicId() {
         return epicId;
+    }
+
+    public void setEpicId(int epicId) {
+        this.epicId = epicId;
     }
 }
