@@ -1,5 +1,7 @@
 package task;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -7,6 +9,8 @@ public class Task {
     private String taskDescription;
     private int taskId;
     private TaskStatus taskStatus;
+    private Duration duration;
+    private LocalDateTime startTime;
 
     public Task(String taskName, String taskDescription, TaskStatus taskStatus) {
         this.taskName = taskName;
@@ -14,6 +18,40 @@ public class Task {
         this.taskStatus = taskStatus;
     }
 
+    public Task(String taskName, String taskDescription, TaskStatus taskStatus,
+                Duration duration, LocalDateTime startTime) {
+        this.taskName = taskName;
+        this.taskDescription = taskDescription;
+        this.taskStatus = taskStatus;
+        this.duration = duration;
+        this.startTime = startTime;
+    }
+
+    // Геттеры и сеттеры для новых полей
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        if (startTime == null || duration == null) {
+            return null;
+        }
+        return startTime.plus(duration);
+    }
+
+    // Остальные геттеры и сеттеры остаются без изменений
     public String getTaskName() {
         return taskName;
     }
@@ -60,8 +98,8 @@ public class Task {
 
     @Override
     public String toString() {
-        return "id: " + taskId + " название: " + taskName + " описание: " + taskDescription + " статус: " + taskStatus;
+        return "id: " + taskId + " название: " + taskName + " описание: " + taskDescription +
+                " статус: " + taskStatus + " длительность: " + duration + " начало: " + startTime;
     }
 }
-
 

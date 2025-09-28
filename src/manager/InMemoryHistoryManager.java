@@ -1,7 +1,8 @@
 package manager;
 
 import task.Task;
-
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +12,6 @@ public class InMemoryHistoryManager implements HistoryManager {
     private final Map<Integer, Node> nodeMap = new HashMap<>();
     private Node first;
     private Node last;
-
 
     @Override
     public void add(Task task) {
@@ -38,9 +38,15 @@ public class InMemoryHistoryManager implements HistoryManager {
             throw new IllegalArgumentException("Нельзя скопировать пустую задачу");
         }
 
+        // Создаем копию с временными полями
         Task copyTask = new Task(original.getTaskName(), original.getTaskDescription(),
                 original.getTaskStatus());
         copyTask.setTaskId(original.getTaskId());
+
+        // Копируем временные поля
+        copyTask.setStartTime(original.getStartTime());
+        copyTask.setDuration(original.getDuration());
+
         return copyTask;
     }
 
@@ -69,7 +75,13 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     private void linkLast(Task task) {
-        last = new Node(task, null, last);
+        final Node newNode = new Node(task, null, last);
+        if (last == null) {
+            first = newNode;
+        } else {
+            last.setNext(newNode);
+        }
+        last = newNode;
     }
 
     @Override
@@ -79,8 +91,10 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     private List<Task> getTasks() {
         final List<Task> taskHistoryList = new ArrayList<>();
-        for (Node node : nodeMap.values()) {
-            taskHistoryList.add(node.getTask());
+        Node current = first;
+        while (current != null) {
+            taskHistoryList.add(current.getTask());
+            current = current.getNext();
         }
         return taskHistoryList;
     }

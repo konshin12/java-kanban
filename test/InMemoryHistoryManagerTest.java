@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import task.Task;
 import task.TaskStatus;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -90,5 +92,40 @@ class InMemoryHistoryManagerTest {
         assertEquals(2, history.size());
         assertEquals(task1, history.get(0));
         assertEquals(task3, history.get(1));
+    }
+
+    @Test
+    void shouldStoreTasksWithTimeFieldsInHistory() {
+        LocalDateTime startTime = LocalDateTime.of(2024, 1, 1, 10, 0);
+        Duration duration = Duration.ofHours(2);
+
+        Task task = new Task("Test", "Description", TaskStatus.NEW);
+        task.setStartTime(startTime);
+        task.setDuration(duration);
+        task.setTaskId(1);
+
+        historyManager.add(task);
+
+        List<Task> history = historyManager.getHistory();
+        Task historyTask = history.get(0);
+
+        assertEquals(startTime, historyTask.getStartTime());
+        assertEquals(duration, historyTask.getDuration());
+        assertEquals(startTime.plus(duration), historyTask.getEndTime());
+    }
+
+    @Test
+    void shouldHandleTasksWithNullTimeFieldsInHistory() {
+        Task task = new Task("Test", "Description", TaskStatus.NEW);
+        task.setTaskId(1);
+
+        historyManager.add(task);
+
+        List<Task> history = historyManager.getHistory();
+        Task historyTask = history.get(0);
+
+        assertNull(historyTask.getStartTime());
+        assertNull(historyTask.getDuration());
+        assertNull(historyTask.getEndTime());
     }
 }
