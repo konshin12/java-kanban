@@ -41,6 +41,4 @@ public class InMemoryTaskManagerTest extends test.TaskManagerTest<InMemoryTaskMa
 
         assertEquals(TaskStatus.IN_PROGRESS, epic.getTaskStatus());
     }
-
-
 }
