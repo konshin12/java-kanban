@@ -1,14 +1,8 @@
 package manager;
 
-import task.Epic;
-import task.Subtask;
-import task.Task;
-import task.TaskStatus;
+import task.*;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.file.Files;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -20,107 +14,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public FileBackedTaskManager(File file) {
         this.file = file;
-    }
-
-    public static FileBackedTaskManager loadFromFile(File file) {
-        FileBackedTaskManager manager = new FileBackedTaskManager(file);
-
-        try {
-            if (!file.exists()) return manager;
-
-            String content = Files.readString(file.toPath());
-            String[] lines = content.split("\n");
-
-            if (lines.length <= 1) return manager;
-
-            List<Task> tasks = new ArrayList<>();
-            List<Epic> epics = new ArrayList<>();
-            List<Subtask> subtasks = new ArrayList<>();
-            List<Integer> historyIds = new ArrayList<>();
-            boolean readingHistory = false;
-
-            for (int i = 1; i < lines.length; i++) {
-                String line = lines[i].trim();
-                if (line.isEmpty()) {
-                    readingHistory = true;
-                    continue;
-                }
-
-                if (readingHistory) {
-                    if (line.equals("history")) continue;
-                    try {
-                        String[] historyFields = line.split(",");
-                        for (String idStr : historyFields) {
-                            if (!idStr.isEmpty()) {
-                                historyIds.add(Integer.parseInt(idStr));
-                            }
-                        }
-                    } catch (NumberFormatException e) {
-                    }
-                    continue;
-                }
-
-                Task task = manager.taskFromString(line);
-                if (task == null) continue;
-
-                if (task.getClass() == Epic.class) {
-                    epics.add((Epic) task);
-                } else if (task.getClass() == Subtask.class) {
-                    subtasks.add((Subtask) task);
-                } else {
-                    tasks.add(task);
-                }
-
-                if (task.getTaskId() >= manager.getId()) {
-                    manager.setId(task.getTaskId() + 1);
-                }
-            }
-
-            for (Epic epic : epics) {
-                manager.getEpics().put(epic.getTaskId(), epic);
-            }
-
-            for (Task task : tasks) {
-                manager.getTasks().put(task.getTaskId(), task);
-            }
-
-            for (Subtask subtask : subtasks) {
-                Epic epic = manager.getEpics().get(subtask.getEpicId());
-                if (epic != null) {
-                    Subtask properSubtask = new Subtask(
-                            subtask.getTaskName(),
-                            subtask.getTaskDescription(),
-                            subtask.getTaskStatus(),
-                            epic,
-                            subtask.getDuration(),
-                            subtask.getStartTime()
-                    );
-                    properSubtask.setTaskId(subtask.getTaskId());
-                    properSubtask.setEpicId(subtask.getEpicId());
-                    manager.getSubtasks().put(properSubtask.getTaskId(), properSubtask);
-                    epic.addSubtaskId(properSubtask.getTaskId());
-                }
-            }
-
-            for (Epic epic : epics) {
-                manager.updateEpicStatus(epic.getTaskId());
-                manager.updateEpic(epic);
-            }
-
-            for (int id : historyIds) {
-                Task task = manager.getTaskById(id);
-                if (task == null) task = manager.getEpicById(id);
-                if (task == null) task = manager.getSubtaskById(id);
-                if (task != null) {
-                    manager.getHistory().add(task);
-                }
-            }
-
-        } catch (IOException e) {
-            throw new ManagerSaveException("Ошибка загрузки", e);
-        }
-
-        return manager;
     }
 
     public void save() {
@@ -245,6 +138,107 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public static FileBackedTaskManager loadFromFile(File file) {
+        FileBackedTaskManager manager = new FileBackedTaskManager(file);
+
+        try {
+            if (!file.exists()) return manager;
+
+            String content = Files.readString(file.toPath());
+            String[] lines = content.split("\n");
+
+            if (lines.length <= 1) return manager;
+
+            List<Task> tasks = new ArrayList<>();
+            List<Epic> epics = new ArrayList<>();
+            List<Subtask> subtasks = new ArrayList<>();
+            List<Integer> historyIds = new ArrayList<>();
+            boolean readingHistory = false;
+
+            for (int i = 1; i < lines.length; i++) {
+                String line = lines[i].trim();
+                if (line.isEmpty()) {
+                    readingHistory = true;
+                    continue;
+                }
+
+                if (readingHistory) {
+                    if (line.equals("history")) continue;
+                    try {
+                        String[] historyFields = line.split(",");
+                        for (String idStr : historyFields) {
+                            if (!idStr.isEmpty()) {
+                                historyIds.add(Integer.parseInt(idStr));
+                            }
+                        }
+                    } catch (NumberFormatException e) {
+                    }
+                    continue;
+                }
+
+                Task task = manager.taskFromString(line);
+                if (task == null) continue;
+
+                if (task.getClass() == Epic.class) {
+                    epics.add((Epic) task);
+                } else if (task.getClass() == Subtask.class) {
+                    subtasks.add((Subtask) task);
+                } else {
+                    tasks.add(task);
+                }
+
+                if (task.getTaskId() >= manager.getId()) {
+                    manager.setId(task.getTaskId() + 1);
+                }
+            }
+
+            for (Epic epic : epics) {
+                manager.getEpics().put(epic.getTaskId(), epic);
+            }
+
+            for (Task task : tasks) {
+                manager.getTasks().put(task.getTaskId(), task);
+            }
+
+            for (Subtask subtask : subtasks) {
+                Epic epic = manager.getEpics().get(subtask.getEpicId());
+                if (epic != null) {
+                    Subtask properSubtask = new Subtask(
+                            subtask.getTaskName(),
+                            subtask.getTaskDescription(),
+                            subtask.getTaskStatus(),
+                            epic,
+                            subtask.getDuration(),
+                            subtask.getStartTime()
+                    );
+                    properSubtask.setTaskId(subtask.getTaskId());
+                    properSubtask.setEpicId(subtask.getEpicId());
+                    manager.getSubtasks().put(properSubtask.getTaskId(), properSubtask);
+                    epic.addSubtaskId(properSubtask.getTaskId());
+                }
+            }
+
+            for (Epic epic : epics) {
+                manager.updateEpicStatus(epic.getTaskId());
+                manager.updateEpic(epic);
+            }
+
+            for (int id : historyIds) {
+                Task task = manager.getTaskById(id);
+                if (task == null) task = manager.getEpicById(id);
+                if (task == null) task = manager.getSubtaskById(id);
+                if (task != null) {
+                    manager.getHistory().add(task);
+                }
+            }
+
+        } catch (IOException e) {
+            throw new ManagerSaveException("Ошибка загрузки", e);
+        }
+
+        return manager;
     }
 
     @Override

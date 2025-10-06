@@ -1,21 +1,19 @@
 package test;
 
-import manager.InMemoryTaskManager;
+import manager.*;
 import org.junit.jupiter.api.Test;
-import task.Epic;
-import task.Subtask;
-import task.TaskStatus;
+import task.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class InMemoryTaskManagerTest extends test.TaskManagerTest<InMemoryTaskManager> {
-
-    InMemoryTaskManager taskManager = createTaskManager();
 
     @Override
     protected InMemoryTaskManager createTaskManager() {
         return new InMemoryTaskManager();
     }
+
+    InMemoryTaskManager taskManager = createTaskManager();
 
     @Test
     public void epicStatusShouldBeNewWhenAllSubtasksNew() {
