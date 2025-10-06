@@ -54,8 +54,16 @@ public class Task {
         return taskName;
     }
 
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
+    }
+
     public String getTaskDescription() {
         return taskDescription;
+    }
+
+    public void setTaskDescription(String taskDescription) {
+        this.taskDescription = taskDescription;
     }
 
     public int getTaskId() {
@@ -66,20 +74,12 @@ public class Task {
         this.taskId = taskId;
     }
 
-    public void setTaskName(String taskName) {
-        this.taskName = taskName;
-    }
-
-    public void setTaskDescription(String taskDescription) {
-        this.taskDescription = taskDescription;
+    public TaskStatus getTaskStatus() {
+        return taskStatus;
     }
 
     public void setTaskStatus(TaskStatus taskStatus) {
         this.taskStatus = taskStatus;
-    }
-
-    public TaskStatus getTaskStatus() {
-        return taskStatus;
     }
 
     @Override

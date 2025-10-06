@@ -1,23 +1,26 @@
 package manager;
 
-import task.*;
+import task.Epic;
+import task.Subtask;
+import task.Task;
+import task.TaskStatus;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.time.Duration;
 
 public class InMemoryTaskManager implements TaskManager {
     private final HashMap<Integer, Task> tasks = new HashMap<>();
     private final HashMap<Integer, Epic> epics = new HashMap<>();
     private final HashMap<Integer, Subtask> subtasks = new HashMap<>();
-    private int id = 1;
     private final HistoryManager historyManager = Managers.getDefaultHistory();
     private final Set<Task> prioritizedTasks = new TreeSet<>(
             Comparator.comparing(Task::getStartTime,
                             Comparator.nullsLast(Comparator.naturalOrder()))
                     .thenComparing(Task::getTaskId)
     );
+    private int id = 1;
 
     public InMemoryTaskManager() {
     }

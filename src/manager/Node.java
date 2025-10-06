@@ -17,20 +17,20 @@ public class Node {
         return task;
     }
 
-    public Node getNext() {
-        return next;
-    }
-
-    public Node getPrev() {
-        return prev;
-    }
-
     public void setTask(Task task) {
         this.task = task;
     }
 
+    public Node getNext() {
+        return next;
+    }
+
     public void setNext(Node next) {
         this.next = next;
+    }
+
+    public Node getPrev() {
+        return prev;
     }
 
     public void setPrev(Node prev) {
