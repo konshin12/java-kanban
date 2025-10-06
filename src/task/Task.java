@@ -27,7 +27,6 @@ public class Task {
         this.startTime = startTime;
     }
 
-    // Геттеры и сеттеры для новых полей
     public Duration getDuration() {
         return duration;
     }
@@ -51,7 +50,6 @@ public class Task {
         return startTime.plus(duration);
     }
 
-    // Остальные геттеры и сеттеры остаются без изменений
     public String getTaskName() {
         return taskName;
     }

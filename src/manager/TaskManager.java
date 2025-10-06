@@ -54,5 +54,5 @@ public interface TaskManager {
 
     void remove(int id);
 
-    public List<Task> getPrioritizedTasks();
+    List<Task> getPrioritizedTasks();
 }

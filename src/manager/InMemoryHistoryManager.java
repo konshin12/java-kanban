@@ -40,12 +40,10 @@ public class InMemoryHistoryManager implements HistoryManager {
             throw new IllegalArgumentException("Нельзя скопировать пустую задачу");
         }
 
-        // Создаем копию с временными полями
         Task copyTask = new Task(original.getTaskName(), original.getTaskDescription(),
                 original.getTaskStatus());
         copyTask.setTaskId(original.getTaskId());
 
-        // Копируем временные поля
         copyTask.setStartTime(original.getStartTime());
         copyTask.setDuration(original.getDuration());
 

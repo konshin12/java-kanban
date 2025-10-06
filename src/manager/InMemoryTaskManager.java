@@ -56,39 +56,45 @@ public class InMemoryTaskManager implements TaskManager {
         prioritizedTasks.remove(task);
     }
 
-    private void updateEpicTime(Epic epic) {
+    private void updateEpicStartTime(Epic epic) {
         List<Subtask> epicSubtasks = getSubtasksByEpicId(epic.getTaskId());
 
-        if (epicSubtasks.isEmpty()) {
-            epic.setStartTime(null);
-            epic.setDuration(null);
-            epic.setEndTime(null);
-            return;
-        }
-
-        // Находим самое раннее время начала
         LocalDateTime earliestStart = epicSubtasks.stream()
                 .map(Subtask::getStartTime)
                 .filter(Objects::nonNull)
                 .min(LocalDateTime::compareTo)
                 .orElse(null);
 
-        // Находим самое позднее время окончания
+        epic.setStartTime(earliestStart);
+    }
+
+    private void updateEpicEndTime(Epic epic) {
+        List<Subtask> epicSubtasks = getSubtasksByEpicId(epic.getTaskId());
+
         LocalDateTime latestEnd = epicSubtasks.stream()
                 .map(Subtask::getEndTime)
                 .filter(Objects::nonNull)
                 .max(LocalDateTime::compareTo)
                 .orElse(null);
 
-        // Вычисляем общую продолжительность
+        epic.setEndTime(latestEnd);
+    }
+
+    private void updateEpicDuration(Epic epic) {
+        List<Subtask> epicSubtasks = getSubtasksByEpicId(epic.getTaskId());
+
         Duration totalDuration = epicSubtasks.stream()
                 .map(Subtask::getDuration)
                 .filter(Objects::nonNull)
                 .reduce(Duration.ZERO, Duration::plus);
 
-        epic.setStartTime(earliestStart);
         epic.setDuration(totalDuration);
-        epic.setEndTime(latestEnd);
+    }
+
+    private void updateEpicTime(Epic epic) {
+        updateEpicStartTime(epic);
+        updateEpicEndTime(epic);
+        updateEpicDuration(epic);
     }
 
     //Методы для Task

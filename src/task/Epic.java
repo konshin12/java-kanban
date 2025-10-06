@@ -18,7 +18,6 @@ public class Epic extends Task {
         subtasksIds = new ArrayList<>();
     }
 
-    @Override
     public LocalDateTime getEndTime() {
         return endTime;
     }
