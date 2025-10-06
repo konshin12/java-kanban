@@ -7,11 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class InMemoryHistoryManager implements  HistoryManager {
-    private static final int OLD_TASK = 0;
-    private static final int HISTORY_LIST_CAPACITY = 10;
-    private final List<Task> taskHistoryList = new ArrayList<>(HISTORY_LIST_CAPACITY);
-
 public class InMemoryHistoryManager implements HistoryManager {
     private static final int OLD_TASK = 0;
     private static final int HISTORY_LIST_CAPACITY = 10;
