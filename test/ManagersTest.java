@@ -11,13 +11,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ManagersTest {
 
     @Test
-    void managersShouldNotReturnNull() {
+    public void managersShouldNotReturnNull() {
         assertNotNull(Managers.getDefault(), "TaskManager не инициализирован");
         assertNotNull(Managers.getDefaultHistory(), "HistoryManager не инициализирован");
     }
 
     @Test
-    void getDefaultWithFileShouldReturnFileBackedTaskManager() {
+    public void getDefaultWithFileShouldReturnFileBackedTaskManager() {
         java.io.File tempFile = new java.io.File("test.csv");
         TaskManager manager = Managers.getDefault(tempFile);
         assertTrue(manager instanceof FileBackedTaskManager,

@@ -18,12 +18,12 @@ class InMemoryHistoryManagerTest {
     private InMemoryHistoryManager historyManager;
 
     @BeforeEach
-    void beforeEach() {
+    public void beforeEach() {
         historyManager = (InMemoryHistoryManager) Managers.getDefaultHistory();
     }
 
     @Test
-    void addShouldStoreTaskInHistory() {
+    public void addShouldStoreTaskInHistory() {
         Task task = new Task("Test", "Description", TaskStatus.NEW);
         historyManager.add(task);
 
@@ -33,7 +33,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void addShouldNotStoreDuplicates() {
+    public void addShouldNotStoreDuplicates() {
         Task task = new Task("Test", "Description", TaskStatus.NEW);
         task.setTaskId(1);
 
@@ -44,7 +44,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void removeShouldDeleteTaskFromHistory() {
+    public void removeShouldDeleteTaskFromHistory() {
         Task task1 = new Task("Task1", "Desc1", TaskStatus.NEW);
         task1.setTaskId(1);
         Task task2 = new Task("Task2", "Desc2", TaskStatus.NEW);
@@ -60,7 +60,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void getHistoryShouldReturnTasksInOrderOfAddition() {
+    public void getHistoryShouldReturnTasksInOrderOfAddition() {
         Task task1 = new Task("Task1", "Desc1", TaskStatus.NEW);
         task1.setTaskId(1);
         Task task2 = new Task("Task2", "Desc2", TaskStatus.NEW);
@@ -76,7 +76,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void removeFromMiddleShouldKeepOrder() {
+    public void removeFromMiddleShouldKeepOrder() {
         Task task1 = new Task("Task1", "Desc1", TaskStatus.NEW);
         task1.setTaskId(1);
         Task task2 = new Task("Task2", "Desc2", TaskStatus.NEW);
@@ -96,7 +96,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void shouldStoreTasksWithTimeFieldsInHistory() {
+    public void shouldStoreTasksWithTimeFieldsInHistory() {
         LocalDateTime startTime = LocalDateTime.of(2024, 1, 1, 10, 0);
         Duration duration = Duration.ofHours(2);
 
@@ -116,7 +116,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void shouldHandleTasksWithNullTimeFieldsInHistory() {
+    public void shouldHandleTasksWithNullTimeFieldsInHistory() {
         Task task = new Task("Test", "Description", TaskStatus.NEW);
         task.setTaskId(1);
 
