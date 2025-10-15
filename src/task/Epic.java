@@ -8,6 +8,11 @@ public class Epic extends Task {
     private final ArrayList<Integer> subtasksIds;
     private LocalDateTime endTime;
 
+    // Конструктор без параметроу для гсон
+    public Epic() {
+        subtasksIds = new ArrayList<>();
+    }
+
     public Epic(String taskName, String taskDescription) {
         super(taskName, taskDescription, TaskStatus.NEW);
         subtasksIds = new ArrayList<>();

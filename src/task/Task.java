@@ -12,6 +12,10 @@ public class Task {
     private Duration duration;
     private LocalDateTime startTime;
 
+    // Конструктор без параметроу для гсон
+    public Task() {
+    }
+
     public Task(String taskName, String taskDescription, TaskStatus taskStatus) {
         this.taskName = taskName;
         this.taskDescription = taskDescription;
@@ -100,4 +104,3 @@ public class Task {
                 " статус: " + taskStatus + " длительность: " + duration + " начало: " + startTime;
     }
 }
-
