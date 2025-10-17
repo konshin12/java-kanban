@@ -1,5 +1,7 @@
-package manager;
+package inMemory;
 
+import base.HistoryManager;
+import manager.Node;
 import task.Task;
 
 import java.util.ArrayList;

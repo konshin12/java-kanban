@@ -1,6 +1,6 @@
 package test;
 
-import manager.FileBackedTaskManager;
+import fileBacked.FileBackedTaskManager;
 import manager.ManagerSaveException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class FileBackedTaskManagerTest extends test.TaskManagerTest<FileBackedTaskManager> {
 
     @TempDir
-    public Path tempDir;
+    protected Path tempDir;
 
     @Override
     protected FileBackedTaskManager createTaskManager() {

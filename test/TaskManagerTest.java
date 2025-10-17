@@ -1,6 +1,6 @@
 package test;
 
-import manager.TaskManager;
+import base.TaskManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import task.Epic;

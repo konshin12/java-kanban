@@ -1,8 +1,12 @@
 package manager;
 
+import base.TaskManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonSerializer;
 import com.sun.net.httpserver.HttpServer;
+import handler.*;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -11,44 +15,7 @@ import java.time.LocalDateTime;
 
 public class HttpTaskServer {
     private static final int PORT = 8080;
-    private static final Gson gson = new GsonBuilder()
-            .registerTypeAdapter(LocalDateTime.class,
-                    new com.google.gson.JsonSerializer<LocalDateTime>() {
-                        @Override
-                        public com.google.gson.JsonElement serialize(LocalDateTime src,
-                                                                     java.lang.reflect.Type typeOfSrc,
-                                                                     com.google.gson.JsonSerializationContext context) {
-                            return new com.google.gson.JsonPrimitive(src.toString());
-                        }
-                    })
-            .registerTypeAdapter(LocalDateTime.class,
-                    new com.google.gson.JsonDeserializer<LocalDateTime>() {
-                        @Override
-                        public LocalDateTime deserialize(com.google.gson.JsonElement json,
-                                                         java.lang.reflect.Type typeOfT,
-                                                         com.google.gson.JsonDeserializationContext context) {
-                            return LocalDateTime.parse(json.getAsString());
-                        }
-                    })
-            .registerTypeAdapter(Duration.class,
-                    new com.google.gson.JsonSerializer<Duration>() {
-                        @Override
-                        public com.google.gson.JsonElement serialize(Duration src,
-                                                                     java.lang.reflect.Type typeOfSrc,
-                                                                     com.google.gson.JsonSerializationContext context) {
-                            return new com.google.gson.JsonPrimitive(src.toMinutes());
-                        }
-                    })
-            .registerTypeAdapter(Duration.class,
-                    new com.google.gson.JsonDeserializer<Duration>() {
-                        @Override
-                        public Duration deserialize(com.google.gson.JsonElement json,
-                                                    java.lang.reflect.Type typeOfT,
-                                                    com.google.gson.JsonDeserializationContext context) {
-                            return Duration.ofMinutes(json.getAsLong());
-                        }
-                    })
-            .create();
+    private static final Gson gson = createGson();
     private final HttpServer server;
     private final TaskManager taskManager;
 
@@ -56,6 +23,26 @@ public class HttpTaskServer {
         this.taskManager = taskManager;
         this.server = HttpServer.create(new InetSocketAddress(PORT), 0);
         configureRoutes();
+    }
+
+    private static Gson createGson() {
+        JsonSerializer<LocalDateTime> localDateTimeSerializer =
+                (src, typeOfSrc, context) -> context.serialize(src.toString());
+
+        JsonDeserializer<LocalDateTime> localDateTimeDeserializer =
+                (json, typeOfT, context) -> LocalDateTime.parse(json.getAsString());
+
+        JsonSerializer<Duration> durationSerializer =
+                (src, typeOfSrc, context) -> context.serialize(src.toMinutes());
+
+        JsonDeserializer<Duration> durationDeserializer =
+                (json, typeOfT, context) -> Duration.ofMinutes(json.getAsLong());
+
+        return new GsonBuilder().registerTypeAdapter(LocalDateTime.class, localDateTimeSerializer)
+                .registerTypeAdapter(LocalDateTime.class, localDateTimeDeserializer)
+                .registerTypeAdapter(Duration.class, durationSerializer)
+                .registerTypeAdapter(Duration.class, durationDeserializer)
+                .create();
     }
 
     public static Gson getGson() {

@@ -1,9 +1,9 @@
 package test;
 
+import base.TaskManager;
 import com.google.gson.Gson;
+import inMemory.InMemoryTaskManager;
 import manager.HttpTaskServer;
-import manager.InMemoryTaskManager;
-import manager.TaskManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
