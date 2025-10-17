@@ -1,18 +1,24 @@
 package manager;
 
-import task.Task;
+import base.HistoryManager;
+import base.TaskManager;
+import filebacked.FileBackedTaskManager;
+import inmemory.InMemoryHistoryManager;
+import inmemory.InMemoryTaskManager;
+
+import java.io.File;
 
 public final class Managers {
-
-    private Managers() {
-    }
 
     public static TaskManager getDefault() {
         return new InMemoryTaskManager();
     }
 
+    public static TaskManager getDefault(File file) {
+        return new FileBackedTaskManager(file);
+    }
+
     public static HistoryManager getDefaultHistory() {
         return new InMemoryHistoryManager();
     }
-
 }
