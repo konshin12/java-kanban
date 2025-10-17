@@ -1,4 +1,4 @@
-package inMemory;
+package inmemory;
 
 import base.HistoryManager;
 import base.TaskManager;

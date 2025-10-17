@@ -2,9 +2,9 @@ package manager;
 
 import base.HistoryManager;
 import base.TaskManager;
-import fileBacked.FileBackedTaskManager;
-import inMemory.InMemoryHistoryManager;
-import inMemory.InMemoryTaskManager;
+import filebacked.FileBackedTaskManager;
+import inmemory.InMemoryHistoryManager;
+import inmemory.InMemoryTaskManager;
 
 import java.io.File;
 
